@@ -1,0 +1,68 @@
+{
+  "status":"200 OK",
+  "code":"/api/status/ok",
+  "qname":{
+    "code":"/api/status/ok",
+    "result":{
+      "type":"/type/type",
+      "id":"/music/track",
+      "properties":[
+        {
+          "expected_type":"/type/float",
+          "type":"/type/property",
+          "id":"/music/track/length",
+          "name":"Length (seconds)"
+        },
+        {
+          "expected_type":"/music/artist",
+          "type":"/type/property",
+          "id":"/music/track/artist",
+          "name":"Recorded by"
+        },
+        {
+          "expected_type":"/music/album",
+          "type":"/type/property",
+          "id":"/music/track/album",
+          "name":"Appears on"
+        },
+        {
+          "expected_type":"/common/webpage",
+          "type":"/type/property",
+          "id":"/music/track/lyrics",
+          "name":"Lyrics"
+        },
+        {
+          "expected_type":"/common/webpage",
+          "type":"/type/property",
+          "id":"/music/track/acquire_webpage",
+          "name":"Buy or download Web page"
+        },
+        {
+          "expected_type":"/music/composition",
+          "type":"/type/property",
+          "id":"/music/track/song",
+          "name":"Recording of Composition"
+        },
+        {
+          "expected_type":"/type/datetime",
+          "type":"/type/property",
+          "id":"/music/track/date",
+          "name":"Date Recorded"
+        },
+        {
+          "expected_type":"/location/location",
+          "type":"/type/property",
+          "id":"/music/track/place",
+          "name":"Place Recorded"
+        },
+        {
+          "expected_type":"/music/track_contribution",
+          "type":"/type/property",
+          "id":"/music/track/contributions",
+          "name":"Contributions"
+        }
+      ]
+    }
+  },
+  "transaction_id":"cache;cache01.sandbox.sjc1:8101;2008-12-30T23:19:01Z;0002"
+}
