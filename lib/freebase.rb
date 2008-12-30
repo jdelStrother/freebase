@@ -70,7 +70,7 @@ module Freebase
     end
     def self.load_schema!
       self.properties = {}
-      propobjs = mqlread(:type => '/type/type', :id => self.freebase_type, :properties => [{:name => nil, :id => nil, :type => nil, :expected_type => nil}]).properties
+      propobjs = mqlread(:type => '/type/type', :id => self.freebase_type, :properties => [{:name => nil, :id => nil, :type => '/type/property', :expected_type => nil}]).properties
       propobjs.each {|propobj|
         self.properties[propobj.id.split(/\//).last.to_sym] = propobj
       }
