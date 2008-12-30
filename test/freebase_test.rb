@@ -9,7 +9,7 @@ class FreebaseTest < Test::Unit::TestCase
   def test_find_first_artist
     assert_kind_of Freebase::Types::Music::Artist,
                    (artist = Freebase::Types::Music::Artist.find(:first,:conditions => {:name => "The Police"}))
-    assert_equal 20, artist.albums.size
+    assert_equal 24, artist.albums.size
   end
   def test_association_preloading
     artist = Freebase::Types::Music::Artist.find(:first,
