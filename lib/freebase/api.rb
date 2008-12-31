@@ -14,13 +14,14 @@ module Freebase::Api
   # For more infomation see the freebase documentation:
   # http://www.freebase.com/view/help/guid/9202a8c04000641f800000000544e139#mqlreaderrors
   class MqlReadError < ArgumentError
-    attr_accessor :code, :freebase_message
-    def initialize(code,message)
+    attr_accessor :code, :freebase_message, :path
+    def initialize(code,message,path)
       self.code = code
       self.freebase_message = message
+      self.path = path
     end
     def message
-      "#{code}: #{freebase_message}"
+      "#{path}: #{freebase_message} [#{code}]"
     end
   end
   
@@ -190,7 +191,7 @@ module Freebase::Api
     unless inner['code'].starts_with?('/api/status/ok')
       Logger.error "<<< Received Error: #{inner.inspect}"
       error = inner['messages'][0]
-      raise MqlReadError.new(error['code'], error['message'])
+      raise MqlReadError.new(error['code'], error['message'], error['path'])
     end
   end
   
