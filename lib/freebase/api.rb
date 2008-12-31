@@ -100,13 +100,13 @@ module Freebase::Api
     
     #provides method based access to the result properties
     def method_missing(name, *args)
-      raise NoMethodError.new(name.to_s) unless args.length == 0
+      super unless args.length == 0
       if @result.has_key?(name)
         resultify @result[name]
       elsif @result.has_key?((singularized_name = name.to_s.singularize.to_sym)) and @result[singularized_name].is_a?(Array)
         resultify @result[singularized_name]
       else
-        raise NoMethodError.new(name.to_s)
+        super
       end
     end
     
