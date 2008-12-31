@@ -1,3 +1,14 @@
+# ActiveSupport's JSON decoding has a bug when decoding values that look a bit like dates - 
+# http://rails.lighthouseapp.com/projects/8994/tickets/1662-patch-json-decoder-date-converter-is-overeager
+# For now, patch ActiveSupport::JSON ourselves
+class<<ActiveSupport::JSON
+  protected
+  if DATE_REGEX == /^\d{4}-\d{2}-\d{2}|\d{4}-\d{1,2}-\d{1,2}[ \t]+\d{1,2}:\d{2}:\d{2}(\.[0-9]*)?(([ \t]*)Z|[-+]\d{2}?(:\d{2})?)?$/
+    remove_const :DATE_REGEX
+    DATE_REGEX = /^(?:\d{4}-\d{2}-\d{2}|\d{4}-\d{1,2}-\d{1,2}[ \t]+\d{1,2}:\d{2}:\d{2}(\.[0-9]*)?(([ \t]*)Z|[-+]\d{2}?(:\d{2})?)?)$/
+  end
+end
+
 module Freebase::Api
   # A class for returing errors from the freebase api.
   # For more infomation see the freebase documentation:
