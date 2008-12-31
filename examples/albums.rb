@@ -37,7 +37,8 @@ artist = Freebase::Types::Music::Artist.find(:first,
       :track => [{
         :fb_object => true,
         :length => nil,
-        :name => {:value => nil, :lang => {:name => "English"}}
+        :name => {:value => nil, :lang => {:name => "English"}},
+        :type => "/music/track"
       }]
     }]
   }
