@@ -207,10 +207,17 @@ module Freebase::Api
     inner = result['qname']
     handle_read_error(inner)
     Logger.trace {"<<< Received Response: #{inner['result'].inspect}"}
-    if options[:raw]
-      inner['result']
+    query_result = inner['result']
+
+    return query_result if options[:raw]
+    
+    case query_result
+    when Array
+      query_result.map{|r| FreebaseResult.new(r)}
+    when Hash
+      FreebaseResult.new(query_result)
     else
-      inner['result'] ? FreebaseResult.new(inner['result']) : nil
+      nil
     end
   end
   

@@ -14,8 +14,15 @@ class ApiTest < Test::Unit::TestCase
     assert_equal "The Polyphonic Spree", data['name']
   end
   def test_find_multiple_records
+    data = mqlread([{:type => '/music/artist', :name => nil, :'name~=' => '^Tori '}])
+    assert_instance_of Array, data
+    assert_instance_of FreebaseResult, data.first
+    assert data.map{|artist| artist.name}.include?('Tori Amos')
+  end
+  def test_find_multiple_raw_data
     data = mqlread([{:type => '/music/artist', :name => nil, :'name~=' => '^Tori '}], :raw => true)
     assert_instance_of Array, data
+    assert_instance_of Hash, data.first
     assert data.map{|artist| artist['name']}.include?('Tori Amos')
   end
 end
