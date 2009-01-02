@@ -8,6 +8,7 @@ class<<ActiveSupport::JSON
     DATE_REGEX = /^(?:\d{4}-\d{2}-\d{2}|\d{4}-\d{1,2}-\d{1,2}[ \t]+\d{1,2}:\d{2}:\d{2}(\.[0-9]*)?(([ \t]*)Z|[-+]\d{2}?(:\d{2})?)?)$/
   end
 end
+require 'pp'
 
 module Freebase::Api
   # A class for returing errors from the freebase api.
@@ -199,16 +200,23 @@ module Freebase::Api
   
   # perform a mqlread and return the results
   # Specify :raw => true if you don't want the results converted into a FreebaseResult object.
+  # Specify :cursor => true to batch the results of a query, sending multiple requests if necessary.
   def mqlread(query, options = {})
     Logger.trace {">>> Sending Query: #{query.inspect}"}
-    envelope = { :qname => {:query => query }}
-    response = http_request mqlread_service_url, :queries => envelope.to_json
-    result = ActiveSupport::JSON.decode(response)
-    inner = result['qname']
-    handle_read_error(inner)
-    Logger.trace {"<<< Received Response: #{inner['result'].inspect}"}
-    query_result = inner['result']
-
+    cursor = options[:cursor]
+    if cursor
+      query_result = []
+      while cursor
+        response = get_query_response(query, cursor)
+        query_result += response['result']
+        cursor = response['cursor']
+      end
+    else
+      response = get_query_response(query, cursor)
+      cursor = response['cursor']
+      query_result = response['result']
+    end
+    
     return query_result if options[:raw]
     
     case query_result
@@ -222,6 +230,16 @@ module Freebase::Api
   end
   
   protected
+  def get_query_response(query, cursor=nil)
+    envelope = { :qname => {:query => query }}
+    envelope[:qname][:cursor] = cursor if cursor    
+    response = http_request mqlread_service_url, :queries => envelope.to_json
+    result = ActiveSupport::JSON.decode(response)
+    inner = result['qname']
+    handle_read_error(inner)
+    Logger.trace {"<<< Received Response: #{inner['result'].inspect}"}
+    inner
+  end
   def params_to_string(parameters)
     parameters.keys.map {|k| "#{URI.encode(k.to_s)}=#{URI.encode(parameters[k])}" }.join('&')
   end

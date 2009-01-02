@@ -25,4 +25,13 @@ class ApiTest < Test::Unit::TestCase
     assert_instance_of Hash, data.first
     assert data.map{|artist| artist['name']}.include?('Tori Amos')
   end
+  
+  def test_uncursored_find
+    # mqlread will limit our result set to 100 elements per request by default
+    assert_equal 100, mqlread([{:type => '/chemistry/chemical_element'}]).length
+  end
+  def test_cursored_find
+    # By using a cursor, we can get all 117 chemical elements (plus a few undiscovered extras)
+    assert mqlread([{:type => '/chemistry/chemical_element'}], :cursor => true).length >= 117
+  end
 end
